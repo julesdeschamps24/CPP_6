@@ -5,12 +5,21 @@
 
 class Bureaucrat
 {
-private:
-    const std::string _name;
-    int _grade;
 public:
     Bureaucrat( std::string name = "Noname");
     Bureaucrat(const Bureaucrat& copy);
     Bureaucrat& operator=(const Bureaucrat& other);
     ~Bureaucrat();
+
+    const std::string& getName() const;
+    int getGrade() const;
+
+    void setGrade(int grade);
+
+    void GradeTooHighException() const;
+    void GradeTooLowExeception() const;
+
+private:
+    const std::string _name;
+    int _grade;
 };
