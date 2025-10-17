@@ -6,7 +6,7 @@
 class Bureaucrat
 {
 public:
-    Bureaucrat( std::string name = "Noname");
+    Bureaucrat( std::string name = "Noname", int grade = 150);
     Bureaucrat(const Bureaucrat& copy);
     Bureaucrat& operator=(const Bureaucrat& other);
     ~Bureaucrat();
