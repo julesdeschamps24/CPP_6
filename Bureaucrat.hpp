@@ -16,6 +16,9 @@ public:
 
     void setGrade(int grade);
 
+    void incrementGrade();
+    void decremetnGrade();
+
     void GradeTooHighException() const;
     void GradeTooLowExeception() const;
 
@@ -23,3 +26,5 @@ private:
     const std::string _name;
     int _grade;
 };
+
+std::ostream& operator<<(std::ostream& out, const Bureaucrat& b);
