@@ -1,15 +1,8 @@
 #include "Bureaucrat.hpp"
 
-Bureaucrat::Bureaucrat( std::string name, int grade) : _name(name), _grade(150) {
-    if(grade < 1)
-        GradeTooHighException(); 
-    else if(grade > 150)
-        GradeTooLowExeception();
-    else
-    {
-        setGrade(grade);
-        std::cout << *this << std::endl;
-    }
+Bureaucrat::Bureaucrat( std::string name, int grade) : _name(name) {
+    setGrade(grade);
+    std::cout << *this << std::endl;
 }
 
 Bureaucrat::Bureaucrat(const Bureaucrat& copy) : _name(copy._name) { *this = copy; }
@@ -23,19 +16,23 @@ Bureaucrat& Bureaucrat::operator=(const Bureaucrat& other) {
 const std::string& Bureaucrat::getName() const { return (_name); }
 int Bureaucrat::getGrade() const { return (_grade); }
 
-void Bureaucrat::setGrade( int grade ) { _grade = grade; }
+void Bureaucrat::setGrade( int grade ) {
+    if(grade < 1)
+        throw GradeTooHighException(); 
+    if(grade > 150)
+        throw GradeTooLowExeception();
+    _grade = grade; 
+ }
 
 void Bureaucrat::incrementGrade() {
-
+    setGrade((_grade - 1));
 }
 
-void Bureaucrat::GradeTooHighException() const {
-    std::cerr << "Error: "<< getName() << " grade range is too high" << std::endl;
-    std::cerr << "Please insert grade between 1 and 150" << std::endl;
+const std::string Bureaucrat::GradeTooHighException() const {
+    return ("Error: " +  getName() + " grade range is too high\nPlease insert grade between 1 and 150");
 }
-void Bureaucrat::GradeTooLowExeception() const {
-    std::cerr << "Error: "<< getName() << " grade range is too low" << std::endl;
-    std::cerr << "Please insert grade between 1 and 150" << std::endl;
+const char* Bureaucrat::GradeTooLowExeception::what() const throw() {
+    return ("Error: grade range is too low\nPlease insert grade between 1 and 150");
 }
 
 Bureaucrat::~Bureaucrat() {}
