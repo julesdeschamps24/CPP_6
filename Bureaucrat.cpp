@@ -28,8 +28,12 @@ void Bureaucrat::incrementGrade() {
     setGrade((_grade - 1));
 }
 
-const std::string Bureaucrat::GradeTooHighException() const {
-    return ("Error: " +  getName() + " grade range is too high\nPlease insert grade between 1 and 150");
+void Bureaucrat::decrementGrade() {
+    setGrade((_grade + 1));
+}
+
+const char* Bureaucrat::GradeTooHighException::what() const throw() {
+    return ("Error: grade range is too high\nPlease insert grade between 1 and 150");
 }
 const char* Bureaucrat::GradeTooLowExeception::what() const throw() {
     return ("Error: grade range is too low\nPlease insert grade between 1 and 150");

@@ -20,9 +20,12 @@ public:
     void setGrade(int grade);
 
     void incrementGrade();
-    void decremetnGrade();
+    void decrementGrade();
 
-    const std::string GradeTooHighException() const;
+    class GradeTooHighException : public std::exception {
+        public:
+            const char* what() const throw();
+    };
     class GradeTooLowExeception : public std::exception {
         public:
             const char* what() const throw();
