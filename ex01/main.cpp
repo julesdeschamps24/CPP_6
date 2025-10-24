@@ -1,48 +1,46 @@
 #include "Bureaucrat.hpp"
+#include "Form.hpp"
 
 int main()
 {
     try {
-    std::cout << "Test 1: grade too low in constructor\n" << std::endl;
-    Bureaucrat a("Jules", 160);
-    a.incrementGrade();
+		std::cout << "Test 1: Bureaucrat grade too low in constructor\n" << std::endl;
+		Bureaucrat a("Jules", 160);
+		a.incrementGrade();
     } catch (std::exception & e) {
-    std::cerr << e.what() << std::endl;
+		std::cerr << e.what() << std::endl;
+    }
+	
+    try {
+		std::cout << "\nTest 2: Form grade too low in constructor\n" << std::endl;
+		Form f("Form", 151, 20);
+    } catch (std::exception & e) {
+		std::cerr << e.what() << std::endl;
+    }
+    try {
+		std::cout << "\nTest 2 bis: Form grade too low in constructor\n" << std::endl;
+		Form f("Form", 20, 200);
+    } catch (std::exception & e) {
+		std::cerr << e.what() << std::endl;
     }
 
-    try {
-    std::cout << "\nTest 2: grade too high in constructor\n" << std::endl;
-    Bureaucrat a("Jules", 0);
-    a.incrementGrade();
-    } catch (std::exception & e) {
-    std::cerr << e.what() << std::endl;
-    }
 
-    try {
-    std::cout << "\nTest 3: grade too low because of decrementation\n" << std::endl;
-    Bureaucrat a("Jules", 148);
-    a.decrementGrade();
-    std::cout << a << std::endl;
-    a.decrementGrade();
-    std::cout << a << std::endl;
-    a.decrementGrade();
-    std::cout << a << std::endl;
-    } catch (std::exception & e) {
-    std::cerr << e.what() << std::endl;
-    }
+	try {
+		std::cout << "\nTest 3: signForm test:" << std::endl;
+		Bureaucrat high("CEO", 1);
+		Bureaucrat low("cashier", 140);
+		Form f("Form", 10, 20);
 
-    try {
-    std::cout << "\nTest 4: grade too high because of incrementation\n" << std::endl;
-    Bureaucrat a("Jules", 2);
-    a.incrementGrade();
-    std::cout << a << std::endl;
-    a.incrementGrade();
-    std::cout << a << std::endl;
-    a.incrementGrade();
-    std::cout << a << std::endl;
-    } catch (std::exception & e) {
-    std::cerr << e.what() << std::endl;
-    }
-    return 0;
+		std::cout << f << std::endl;
+
+		std::cout << "\nHigh grade Bureaucrat:" << std::endl;
+		high.signForm(f);
+
+		std::cout << "\nLow grade Bureaucrat:" << std::endl;
+		low.signForm(f);
+
+
+	} catch (std::exception & e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
-
