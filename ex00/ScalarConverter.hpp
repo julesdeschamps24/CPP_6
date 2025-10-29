@@ -1,7 +1,11 @@
 #pragma once 
 
 #include <iostream>
-#include <string>
+#include <cstdlib>
+#include <cstring>
+#include <cerrno>
+#include <climits>
+#include <iomanip>
 
 class ScalarConverter
 {

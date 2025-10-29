@@ -1,6 +1,12 @@
 #include "ScalarConverter.hpp"
 
-int main(void)
+int main(int ac, char** av)
 {
-	ScalarConverter::convert("f");
+	if(ac != 2)
+	{
+		std::cerr << "Error: wrong argument number\n./a.out <str>" << std::endl;
+		return (1);
+	}
+	ScalarConverter::convert(av[1]);
+	return (0);
 }

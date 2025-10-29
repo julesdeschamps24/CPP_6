@@ -1,5 +1,4 @@
 #include "ScalarConverter.hpp"
-#include <string>
 
 static bool manage_pseudo_literals(const std::string& str){
 	const std::string pseudo[] = {"-inff", "-inf", "+inff", "+inf", "nanf", "nan"};
@@ -12,28 +11,11 @@ static bool manage_pseudo_literals(const std::string& str){
 	if(type == -1 )
 		return (false);
 
-	switch (type) {
-		case 0:  // -
-			std::cout << "char: impossible\n";
-            std::cout << "int: impossible\n";
-            std::cout << "float: -inff\n";
-            std::cout << "double: -inf" << std::endl;
-            break;
-
-		case 1: // +
-            std::cout << "char: impossible\n";
-            std::cout << "int: impossible\n";
-            std::cout << "float: +inff\n";
-            std::cout << "double: +inf" << std::endl;
-            break;
-			
-		case 2: // nan
-            std::cout << "char: impossible\n";
-            std::cout << "int: impossible\n";
-            std::cout << "float: nanf\n";
-            std::cout << "double: nan" << std::endl;
-            break;
-	}
+	type *= 2;
+	std::cout << "char: impossible\n" 
+	<< "int: impossible\n"
+	<< "float: " << pseudo[type]
+	<< "\ndouble: " << pseudo[type + 1] << std::endl;
 	return (true);
 }
 
@@ -43,17 +25,164 @@ static bool manage_char(const std::string& str, int size) {
 
 	std::cout << "char: " << str 
 	<< "\nint: " << static_cast<int>(str[0])
-	<< "\nfloat: " << static_cast<float>(str[0])
-	<< "\ndouble: " << static_cast<double>(str[0]) << std::endl;
+	<< "\nfloat: " << static_cast<float>(str[0]) << ".0f"
+	<< "\ndouble: " << static_cast<double>(str[0]) << ".0" <<std::endl;
+	return (true);
+}
+
+static bool is_zero(const std::string& str)
+{
+	if(str[0] != '0')
+			return (false);
+	return (true);
+}
+
+static void print_decimals(const std::string& str, int nb_dec, int size)
+{
+	float float_nb = std::strtof(str.c_str(), NULL);
+	
+	size--;
+	if(str[size] == 'f')
+		size--;
+	std::cout << "float: ";
+	if(errno != 0)
+	{
+		std::cout << "erange errror" << std::endl;
+		errno = 0;
+	}
+	else
+	{
+		if(nb_dec <= 0 || (size - nb_dec) == 6)
+			std::cout << std::fixed << std::setprecision(1) << float_nb << "f" << std::endl;
+		else
+		{
+			if(is_zero(&str[size - nb_dec + 1]) == true)
+				std::cout << std::fixed << std::setprecision(1) << float_nb << "f" << std::endl;
+			else
+				std::cout << float_nb << "f" << std::endl;
+		}
+	}
+
+	double double_nb = std::strtod(str.c_str(), NULL);
+	
+	size--;
+	if(str[size] == 'f')
+		size--;
+	std::cout << "double: ";
+	if(errno != 0)
+	{
+		std::cout << "erange errror" << std::endl;
+		errno = 0;
+	}
+	else
+	{
+		if(nb_dec <= 0 || (size - nb_dec) == 12)
+			std::cout << std::fixed << std::setprecision(1) << double_nb << std::endl;
+		else
+		{
+			if(is_zero(&str[size - nb_dec + 1]) == true)
+				std::cout << std::fixed << std::setprecision(1) << double_nb << std::endl;
+			else
+				std::cout << double_nb << std::endl;
+		}
+	}
+}
+
+static void print_num(const std::string& str, int size)
+{
+	long int_nb;
+	int nb_of_decimal = 0;
+	char* end = 0;
+
+	int_nb = strtol(str.c_str(), &end, 10);
+	if(end != 0)
+	{
+		nb_of_decimal = strlen(end) - 1;
+		if(str[size - 1] == 'f')
+			nb_of_decimal--;
+	}
+	if(errno != 0 || int_nb < INT_MIN || int_nb > INT_MAX)
+	{
+		std::cout << "char: non displayable\n";
+		std::cout << "int: erange error\n";
+		errno = 0;
+	}
+	else
+	{
+		std::cout << "char: ";
+		if(int_nb < 32 || int_nb > 126)
+			std::cout << "non displayable\n";
+		else 
+			std::cout << static_cast<char>(int_nb) << "\n";
+		std::cout << "int :" << static_cast<int>(int_nb) << "\n";
+	}
+	print_decimals(str, nb_of_decimal, size);
+}
+
+static bool manage_decimals(const std::string& str, int size, int index)
+{
+	if(str[index] == '\0' || str[index] == 'f')
+		return (false);
+
+	while(index != size)
+	{
+		if(std::isdigit(str[index]) == false)
+		{
+			if(str[index] != 'f')
+			{
+				std::cout << &str[index] << std::endl;
+				return (false);
+			}
+			else
+			{
+				print_num(str, size);
+				return (true);
+			}
+		}
+		index++;
+	}
+	print_num(str, size);
+	return (true);
+}
+
+static bool manage_number(const std::string& str, int size)
+{
+	int i = 0;
+
+	if(str[0] == '+' || str[0] == '-')
+		i++;
+	while(i != size)
+	{
+		if(std::isdigit(str[i]) == false)
+		{
+			if(str[i] == '.' && i >= 1)
+				return (manage_decimals(str, size, i + 1));
+			else
+				return (false);
+		}
+		i++;
+	}
+	print_num(str, size);
 	return (true);
 }
 
 void ScalarConverter::convert(const std::string& str) {
+	int size = str.size();
+	
+	if(size == 0)
+	{
+		std::cerr << "Error: wrong input" << std::endl;
+		return;
+	}
+
 	if(manage_pseudo_literals(str) == true)
 		return;
 
-	int size = str.size();
-
 	if(manage_char(str, size) == true)
 		return;
+
+	if(manage_number(str, size) == true)
+		return;
+
+	std::cerr << "Error: wrong input" << std::endl;
 }
