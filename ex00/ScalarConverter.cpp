@@ -1,5 +1,10 @@
 #include "ScalarConverter.hpp"
 
+ScalarConverter::ScalarConverter() {}
+ScalarConverter::ScalarConverter(const ScalarConverter& other) { (void)other; }
+ScalarConverter& ScalarConverter::operator=(const ScalarConverter& other) { (void)other; return *this; }
+ScalarConverter::~ScalarConverter() {}
+
 static bool manage_pseudo_literals(const std::string& str){
 	const std::string pseudo[] = {"-inff", "-inf", "+inff", "+inf", "nanf", "nan"};
 	int type = -1;
