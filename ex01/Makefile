@@ -23,7 +23,7 @@ clean:
 	rm -f $(OBJS)
 
 run: all
-	./$(NAME) $(ARGS) 105.0f
+	./$(NAME) $(ARGS)
 
 run2: all
 	valgrind --show-leak-kinds=all --leak-check=full ./$(NAME) $(ARGS)

@@ -1,8 +1,10 @@
 #pragma once
 
+#include <stdint.h>
 #include <string>
 #include <iostream>
-#include <stdint.h>
+
+typedef unsigned long uintptr_t;
 
 struct Data {
     std::string name;
