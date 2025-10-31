@@ -134,10 +134,7 @@ static bool manage_decimals(const std::string& str, int size, int index)
 		if(std::isdigit(str[index]) == false)
 		{
 			if(str[index] != 'f')
-			{
-				std::cout << &str[index] << std::endl;
 				return (false);
-			}
 			else
 			{
 				print_num(str, size);
